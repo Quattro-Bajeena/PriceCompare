@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porównywarka cen - {% block title %}{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+            <h1 class="h3">Porównywarka cen</h1>
+            <a href="{{ url_for('cart') }}" class="btn btn-outline-primary">
+                Koszyk
+                {% if cart_count is defined and cart_total is defined %}
+                    ({{ cart_count }} szt., {{ "%.2f"|format(cart_total) }} zł)
+                {% endif %}
+            </a>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    <!-- Bootstrap JS (optional, for some components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

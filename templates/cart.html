@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Koszyk{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-3">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary me-2">&larr; Powrót do strony głównej</a>
+    <form method="post" action="{{ url_for('clear_cart') }}" class="d-inline">
+        <button type="submit" class="btn btn-outline-danger">Wyczyść koszyk</button>
+    </form>
+</div>
+<h2 class="mb-4">Koszyk</h2>
+
+{% if message %}
+    <div class="alert alert-info">{{ message }}</div>
+{% endif %}
+
+{% if seller_map %}
+    <form method="post" action="{{ url_for('optimize') }}" class="row g-3 align-items-end mb-4">
+        <div class="col-auto">
+            <label for="algo" class="form-label">Algorytm optymalizacji:</label>
+            <select name="algo" id="algo" class="form-select">
+                <option value="exact" {% if session.algo == 'exact' %}selected{% endif %}>Dokładny (wolny)</option>
+                <option value="heuristic" {% if session.algo == 'heuristic' %}selected{% endif %}>Heurystyczny (szybki)</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success">Optymalizuj koszyk</button>
+        </div>
+    </form>
+    <div class="row g-4">
+        {% for seller_id, group in seller_map.items() %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ group.seller.name }}</h5>
+                    <p class="card-text text-muted mb-2">Wysyłka: {{ "%.2f"|format(group.seller.shipping_cost) }} zł</p>
+                    <ul class="list-group list-group-flush mb-2">
+                        {% for item in group['items'] %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>{{ item.product.name }}</strong> — {{ "%.2f"|format(item.offer.price) }} zł</span>
+                            <a href="{{ url_for('remove_from_cart', index=item.global_index) }}" class="btn btn-danger btn-sm">Usuń</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">Twój koszyk jest pusty. <a href="{{ url_for('index') }}">Wróć do zakupów</a></div>
+{% endif %}
+{% endblock %} 
