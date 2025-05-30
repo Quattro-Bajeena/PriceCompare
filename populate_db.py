@@ -89,7 +89,7 @@ def populate_database():
         import random
         offers = []
         for product in products:
-            base_price = random.uniform(100, 8000)
+            base_price = random.uniform(25, 300)
             seller_ids = random.sample(range(1, 11), k=random.randint(3, 7))
             for seller_id in seller_ids:
                 # Price varies only by 10-15% from base price
