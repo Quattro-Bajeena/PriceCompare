@@ -22,6 +22,9 @@
             <select name="algo" id="algo" class="form-select">
                 <option value="exact" {% if session.algo == 'exact' %}selected{% endif %}>Dokładny (wolny)</option>
                 <option value="heuristic" {% if session.algo == 'heuristic' %}selected{% endif %}>Heurystyczny (szybki)</option>
+                <option value="product_enum" {% if session.algo == 'product_enum' %}selected{% endif %}>PRODUCT-ENUM (dokładny, produkty → sklepy)</option>
+                <option value="shop_enum" {% if session.algo == 'shop_enum' %}selected{% endif %}>SHOP-ENUM (dokładny, sklepy → produkty)</option>
+                <option value="greedy" {% if session.algo == 'greedy' %}selected{% endif %}>Zachłanny (bardzo szybki, lokalnie optymalny)</option>
             </select>
         </div>
         <div class="col-auto">

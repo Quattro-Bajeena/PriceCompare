@@ -6,19 +6,24 @@ def populate_database():
         db.drop_all()
         db.create_all()
 
-        # Real Polish shops/brands
-        sellers = [
-            Seller(name="MediaMarkt", shipping_cost=19.99),
-            Seller(name="RTV Euro AGD", shipping_cost=18.99),
-            Seller(name="Komputronik", shipping_cost=11.99),
-            Seller(name="X-Kom", shipping_cost=17.99),
-            Seller(name="Morele.net", shipping_cost=18.49),
-            Seller(name="Neonet", shipping_cost=17.49),
-            Seller(name="Media Expert", shipping_cost=18.79),
-            Seller(name="Alsen", shipping_cost=19.49),
-            Seller(name="OleOle!", shipping_cost=16.99),
-            Seller(name="Avans", shipping_cost=17.29)
+        # Real Polish shops/brands with random shipping costs
+        sellers = []
+        seller_names = [
+            "MediaMarkt",
+            "RTV Euro AGD",
+            "Komputronik",
+            "X-Kom",
+            "Morele.net",
+            "Neonet",
+            "Media Expert",
+            "Alsen",
+            "OleOle!",
+            "Avans"
         ]
+        import random
+        for name in seller_names:
+            shipping_cost = round(random.uniform(9.99, 24.99), 2)
+            sellers.append(Seller(name=name, shipping_cost=shipping_cost))
         db.session.add_all(sellers)
         db.session.commit()
 
@@ -84,10 +89,11 @@ def populate_database():
         import random
         offers = []
         for product in products:
+            base_price = random.uniform(100, 8000)
             seller_ids = random.sample(range(1, 11), k=random.randint(3, 7))
             for seller_id in seller_ids:
-                base_price = random.uniform(100, 8000)
-                price = round(base_price + random.uniform(-0.2, 0.2) * base_price, 2)
+                # Price varies only by 10-15% from base price
+                price = round(base_price * random.uniform(0.85, 1.15), 2)
                 offers.append(Offer(product_id=product.id, seller_id=seller_id, price=price))
         db.session.add_all(offers)
         db.session.commit()
