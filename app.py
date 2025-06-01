@@ -140,7 +140,6 @@ def remove_from_cart(index):
 
 @app.route('/optimize', methods=['POST'])
 def optimize():
-    # Pobierz wybrany algorytm z formularza lub sesji
     algo = request.form.get('algo', session.get('algo', 'exact'))
     session['algo'] = algo
     cart_items = session.get('cart', [])
@@ -153,15 +152,7 @@ def optimize():
         if offer.product_id not in product_offers:
             product_offers[offer.product_id] = []
         product_offers[offer.product_id].append(offer)
-    # Wczytaj wszystkich sprzedawców do pamięci, aby zminimalizować zapytania do bazy
     sellers = {s.id: s for s in Seller.query.all()}
-    # --- Algorytm zachłanny (Greedy) ---
-    # 1. Ustal kolejność produktów (np. wg malejącej rekomendowanej ceny lub po prostu tak jak w koszyku).
-    # 2. Dla każdego produktu wybierz sklep, który daje najniższy koszt (cena produktu + koszt wysyłki, jeśli jeszcze nie był użyty).
-    # 3. Po przypisaniu produktu do sklepu, koszt wysyłki tego sklepu ustaw na 0 dla kolejnych produktów (bo płacimy za wysyłkę tylko raz).
-    # 4. Powtarzaj dla wszystkich produktów.
-    # 5. Na końcu sumuj ceny produktów i koszty wysyłki użytych sklepów.
-    # Algorytm bardzo szybki, daje dobre wyniki w praktyce, ale nie zawsze optymalne.
     def greedy():
         ordered_pids = product_ids.copy()
         shipping_paid = {sid: False for sid in sellers}

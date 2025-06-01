@@ -2,11 +2,9 @@ from app import app, db, Product, Seller, Offer
 
 def populate_database():
     with app.app_context():
-        # Clear existing data
         db.drop_all()
         db.create_all()
 
-        # Real Polish shops/brands with random shipping costs
         sellers = []
         seller_names = [
             "MediaMarkt",
@@ -27,7 +25,6 @@ def populate_database():
         db.session.add_all(sellers)
         db.session.commit()
 
-        # Expanded Polish product names/descriptions inspired by categories.txt
         products = [
             Product(name="Laptop ultrabook 14 cali", description="Lekki ultrabook z ekranem 14 cali, idealny do pracy i nauki"),
             Product(name="Laptop biznesowy Pro", description="Wytrzymały laptop biznesowy z czytnikiem linii papilarnych"),
@@ -85,14 +82,12 @@ def populate_database():
         db.session.add_all(products)
         db.session.commit()
 
-        # Create offers (randomized for demo)
         import random
         offers = []
         for product in products:
             base_price = random.uniform(25, 300)
             seller_ids = random.sample(range(1, 11), k=random.randint(3, 7))
             for seller_id in seller_ids:
-                # Price varies only by 10-15% from base price
                 price = round(base_price * random.uniform(0.85, 1.15), 2)
                 offers.append(Offer(product_id=product.id, seller_id=seller_id, price=price))
         db.session.add_all(offers)
